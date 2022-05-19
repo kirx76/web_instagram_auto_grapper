@@ -91,6 +91,20 @@ class UserStore {
     await this.setInstagramAccounts();
   };
 
+  @action changeInstagramUserEnabledStatus = (user: instagramuser) => {
+    return axios
+      .post<undefined, TAxiosResponse<instagramuser>>(
+        `/api/instagram_user/enable_change`,
+        user
+      )
+      .then((account) => {
+        this._instagramUsers = this._instagramUsers.map((iUser) =>
+          iUser.pk === user.pk ? account.data : iUser
+        );
+        return this._instagramUsers;
+      });
+  };
+
   @computed get user() {
     return this._user;
   }

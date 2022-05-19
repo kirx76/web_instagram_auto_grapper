@@ -13,32 +13,24 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       user_id: telegram_id as string,
     },
   });
-  const instagramUsers = await prisma.instagramuser.findMany({
+  const preInstagramUsers = await prisma.instagramuser.findMany({
     where: {
       added_by_id: telegram_user?.id,
     },
+    include: {
+      _count: {
+        select: {
+          instagrampost: true,
+          instagramstory: true,
+          instagramhighlight: true,
+        },
+      },
+    },
   });
-  // const telegramUserInstagramAccounts = await prisma.telegramuser.findMany({
-  //   where: {
-  //     user_id: telegram_id as string,
-  //   },
-  //   select: {
-  //     username: true,
-  //     instagramuser: {
-  //       select: {
-  //         username: true,
-  //         pk: true,
-  //         full_name: true,
-  //         profile_pic_url: true,
-  //         profile_pic_url_hd: true,
-  //         is_private: true,
-  //         enabled: true,
-  //         added_by_id: true,
-  //       },
-  //     },
-  //   },
-  // });
-  res.json(instagramUsers);
+
+  console.log(preInstagramUsers);
+
+  res.json(preInstagramUsers);
 };
 
 export default handle;
